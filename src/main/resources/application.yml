@@ -1,0 +1,29 @@
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+
+spring:
+  application:
+    name: gateway
+  cloud:
+    consul:
+      host: localhost  # Consul agent host
+      port: 8500       # Consul agent port
+      discovery:
+        prefer-ip-address: true   # Prefer IP addresses of services over hostnames
+    gateway:
+      discovery:
+        locator:
+          enabled: true           # Enable dynamic service discovery via Consul
+          lower-case-service-id: true  # Optional: Make service IDs case-insensitive
+          predicates:
+            - name: Path
+              args:
+                pattern: "'/services/'+serviceId.toLowerCase()+'/**'"
+          filters:
+            - name: RewritePath
+              args:
+                regexp: "'/services/' + serviceId.toLowerCase() + '/(?<remaining>.*)'"
+                replacement: "'/${remaining}'"
+server:
+  port: 8080
