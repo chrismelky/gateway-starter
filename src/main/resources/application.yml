@@ -25,5 +25,8 @@ spring:
               args:
                 regexp: "'/services/' + serviceId.toLowerCase() + '/(?<remaining>.*)'"
                 replacement: "'/${remaining}'"
+      httpclient:
+        pool:
+          max-connections: 1000
 server:
   port: 8080
